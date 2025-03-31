@@ -19,5 +19,11 @@ module.exports = {
     ecmaVersion: "latest",
     sourceType: "module",
   },
-  rules: { "no-underscore-dangle": "off" },
+  rules: {
+    "no-underscore-dangle": "off",
+    "no-inline-comments": "off",
+    "no-console": "off",
+    "spaced-comment": ["error", "never", {}],
+    "no-else-return": ["error", { allowElseIf: true }],
+  },
 };

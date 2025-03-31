@@ -16,9 +16,11 @@ const addLike = (req, res) => {
     .catch((err) => {
       console.log(err);
       if (err.name === "DocumentNotFoundError") {
-        return res.status(404).send({ message: "error: item not found." });
+        return res
+          .status(404)
+          .send({ message: "error: item not found. Unable to apply like." });
       } else if (err.name === "CastError") {
-        return res.status(401).send({ message: "error" });
+        return res.status(400).send({ message: "error" });
       }
       return res.status(500).send({ message: "error" });
     });
@@ -42,7 +44,7 @@ const removeLike = (req, res) => {
       if (err.name === "DocumentNotFoundError") {
         return res.status(404).send({ message: "error: item not found." });
       } else if (err.name === "CastError") {
-        return res.status(401).send({ message: "error" });
+        return res.status(400).send({ message: "error" });
       }
       return res.status(500).send({ message: "error" });
     });

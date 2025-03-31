@@ -23,14 +23,14 @@ const getUser = (req, res) => {
     .orFail()
     .then((user) => {
       console.log("Here is your user.");
-      res.status(200).send(user); //assuming the response is even expexting something called data
+      res.status(200).send(user);
     })
     .catch((err) => {
       console.log(err);
       if (err.name === "DocumentNotFoundError") {
         return res.status(404).send({ message: "error: user not found." });
       } else if (err.name === "CastError") {
-        return res.status(401).send({ message: "error" });
+        return res.status(400).send({ message: "error" });
       }
       return res.status(500).send({ message: "error" });
     });
@@ -42,7 +42,6 @@ const createUser = (req, res) => {
     name,
     avatar,
   })
-    //.orFail()//there's some problem with this... then again I'm not actually 'looking' for anything so this isn't really needed
     .then((user) => {
       res.status(201).send(user);
     })
@@ -51,7 +50,7 @@ const createUser = (req, res) => {
       if (err.name === "CastError") {
         return res.status(401).send({ message: "error" });
       } else if (err.name === "ValidationError") {
-        return res.status(500).send({ message: "error" });
+        return res.status(400).send({ message: "Validation error." });
       }
       return res.status(500).send({ message: "error" });
     });

@@ -12,7 +12,7 @@ const deleteItem = (req, res) => {
       if (err.name === "DocumentNotFoundError") {
         return res.status(404).send({ message: "error: item not found." });
       } else if (err.name === "CastError") {
-        return res.status(401).send({ message: "error" });
+        return res.status(400).send({ message: "error" });
       }
       return res.status(500).send({ message: "error" });
     });
@@ -40,7 +40,6 @@ const createItem = (req, res) => {
   const { name, weather, imageUrl, likes, createdAt } = req.body;
   const owner = req.user._id;
   ClothingItems.create({ name, weather, imageUrl, owner, likes, createdAt })
-    //.orFail()
     .then((item) => {
       console.log("Item created!");
       res.status(201).send(item);
@@ -50,7 +49,7 @@ const createItem = (req, res) => {
       if (err.name === "CastError") {
         return res.status(401).send({ message: "error" });
       } else if (err.name === "ValidationError") {
-        return res.status(500).send({ message: "error" });
+        return res.status(400).send({ message: "Validation error" });
       }
       return res.status(500).send({ message: "error" });
     });

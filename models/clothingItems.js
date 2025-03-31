@@ -31,7 +31,6 @@ const clothingItemSchema = new mongoose.Schema({
   likes: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "user",
-    //required: true,//maybe toy with making this optional?
     required: false,
   },
   createdAt: {
