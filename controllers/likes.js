@@ -1,5 +1,7 @@
 const ClothingItems = require("../models/clothingItems");
 
+const error = require("../utils/errors");
+
 const addLike = (req, res) => {
   const { itemId } = req.params;
   const { _id } = req.user;
@@ -15,14 +17,8 @@ const addLike = (req, res) => {
     })
     .catch((err) => {
       console.log(err);
-      if (err.name === "DocumentNotFoundError") {
-        return res
-          .status(404)
-          .send({ message: "error: item not found. Unable to apply like." });
-      } else if (err.name === "CastError") {
-        return res.status(400).send({ message: "error" });
-      }
-      return res.status(500).send({ message: "error" });
+      const thisErr = error[err.name];
+      return res.status(thisErr.code).send({ message: thisErr.message });
     });
 };
 
@@ -41,12 +37,8 @@ const removeLike = (req, res) => {
     })
     .catch((err) => {
       console.log(err);
-      if (err.name === "DocumentNotFoundError") {
-        return res.status(404).send({ message: "error: item not found." });
-      } else if (err.name === "CastError") {
-        return res.status(400).send({ message: "error" });
-      }
-      return res.status(500).send({ message: "error" });
+      const thisErr = error[err.name];
+      return res.status(thisErr.code).send({ message: thisErr.message });
     });
 };
 

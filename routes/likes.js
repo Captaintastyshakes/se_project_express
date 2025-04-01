@@ -1,4 +1,4 @@
-const router = require("express").Router({ mergeParams: true }); //thank you codeemzy!
+const router = require("express").Router({ mergeParams: true }); // thank you codeemzy!
 
 const { addLike, removeLike } = require("../controllers/likes");
 

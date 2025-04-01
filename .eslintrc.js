@@ -21,9 +21,5 @@ module.exports = {
   },
   rules: {
     "no-underscore-dangle": "off",
-    "no-inline-comments": "off",
-    "no-console": "off",
-    "spaced-comment": ["error", "never", {}],
-    "no-else-return": ["error", { allowElseIf: true }],
   },
 };

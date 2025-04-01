@@ -1,20 +1,17 @@
 const User = require("../models/user");
 
+const error = require("../utils/errors");
+
 const getUsers = (req, res) => {
   User.find({})
-    .orFail()
     .then((users) => {
       console.log("Users returned!");
       res.status(200).send(users);
     })
     .catch((err) => {
       console.log(err);
-      if (err.name === "DocumentNotFoundError") {
-        return res.status(404).send({ message: "error: user not found." });
-      } else if (err.name === "CastError") {
-        return res.status(401).send({ message: "error" });
-      }
-      return res.status(500).send({ message: "error" });
+      const thisErr = error[err.name];
+      return res.status(thisErr.code).send({ message: thisErr.message });
     });
 };
 
@@ -27,12 +24,8 @@ const getUser = (req, res) => {
     })
     .catch((err) => {
       console.log(err);
-      if (err.name === "DocumentNotFoundError") {
-        return res.status(404).send({ message: "error: user not found." });
-      } else if (err.name === "CastError") {
-        return res.status(400).send({ message: "error" });
-      }
-      return res.status(500).send({ message: "error" });
+      const thisErr = error[err.name];
+      return res.status(thisErr.code).send({ message: thisErr.message });
     });
 };
 
@@ -47,12 +40,8 @@ const createUser = (req, res) => {
     })
     .catch((err) => {
       console.log(err);
-      if (err.name === "CastError") {
-        return res.status(401).send({ message: "error" });
-      } else if (err.name === "ValidationError") {
-        return res.status(400).send({ message: "Validation error." });
-      }
-      return res.status(500).send({ message: "error" });
+      const thisErr = error[err.name];
+      return res.status(thisErr.code).send({ message: thisErr.message });
     });
 };
 
