@@ -14,6 +14,14 @@ Most(all) server testing is done using postman to test the server in the various
 -MongoDb
 All the data for this project interfaces with databases generated and modified by MongoDb including the generation/application of models/schemas.
 
+//NEW//
+
+-JSON Web Token verification and authorization
+
+-Multiple users with different identification and authorization
+
+-Items/cards/photos having owners with certain rights
+
 ## Running the Project
 
 `npm run start` — to launch the server
