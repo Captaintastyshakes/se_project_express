@@ -10,8 +10,7 @@ const verifyAuthorization = (req, res, next) => {
   const token = authorization.replace("Bearer ", "");
   let payload;
   try {
-    //payload = jwt.verify(token, JWT_SECRET); // this isn't working for some reason
-    payload = jwt.decode(token);
+    payload = jwt.verify(token, JWT_SECRET);
   } catch (err) {
     console.log("Error block VA: " + err);
     const thisErr = error[err.name];

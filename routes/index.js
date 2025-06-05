@@ -8,11 +8,14 @@ const error = require("../utils/errors");
 
 const { signUp, login } = require("../controllers/users");
 
+const { checkForExistingUser } = require("../middlewares/existingUser");
+
 router.use("/users", userRouter);
 
 router.use("/items", clothingRouter);
 
-router.post("/signup", signUp);
+router.post("/signup", checkForExistingUser, signUp); // added a middleware to make sure existing emails are caught
+// "but mike- shouldn't the schema enforce the unique property for emails?" Golly gee it should but it doesn't so this is a manual catch.
 
 router.post("/signin", login);
 

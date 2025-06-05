@@ -35,7 +35,7 @@ const error = {
   },
   TypeError: {
     code: 404,
-    message: "IDFK, wrong type m80",
+    message: "Wrong type, resource unable to be found.",
   },
   MongoServerError: {
     code: 409,
