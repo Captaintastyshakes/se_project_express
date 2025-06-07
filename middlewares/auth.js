@@ -12,7 +12,7 @@ const verifyAuthorization = (req, res, next) => {
   try {
     payload = jwt.verify(token, JWT_SECRET);
   } catch (err) {
-    console.log("Error block VA: " + err);
+    // console.log("Error block VA: " + err);
     const thisErr = error[err.name];
     if (!thisErr) {
       return res

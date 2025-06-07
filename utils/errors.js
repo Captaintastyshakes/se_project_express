@@ -1,5 +1,3 @@
-const { JsonWebTokenError } = require("jsonwebtoken");
-
 const error = {
   ValidationError: {
     code: 400,

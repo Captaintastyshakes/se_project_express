@@ -5,9 +5,8 @@ const error = require("../utils/errors");
 const deleteItem = (req, res) => {
   const { itemId } = req.params;
   ClothingItems.findById({ _id: itemId })
-    //.orFail()
     .then((item) => {
-      if (item.owner != req.user._id) {
+      if (item.owner !== req.user._id) {
         return Promise.reject(
           new Error("Owner and requester mistmatch. Internal code DI1")
         );
@@ -32,7 +31,8 @@ const deleteItem = (req, res) => {
         return res
           .status(500)
           .send({ message: "Uncaught exception, internal code DI3" });
-      } else if (err.message.includes("DI1")) {
+      }
+      if (err.message.includes("DI1")) {
         return res
           .status(403)
           .send({ message: "Owner and requester mismatch! Internal code DI4" });
@@ -83,8 +83,6 @@ const createItem = (req, res) => {
         .send({ message: `${thisErr.message}, internal code CI2` });
     });
 };
-
-//integrating likes controllers here
 
 const addLike = (req, res) => {
   const { itemId } = req.params;
@@ -138,7 +136,47 @@ const removeLike = (req, res) => {
     });
 };
 
-//
-
-//module.exports = { getItems, createItem, deleteItem };
 module.exports = { getItems, createItem, deleteItem, addLike, removeLike };
+
+// storing original forms before linting
+
+/* const deleteItem = (req, res) => {
+  const { itemId } = req.params;
+  ClothingItems.findById({ _id: itemId })
+    //.orFail()
+    .then((item) => {
+      if (item.owner != req.user._id) {
+        return Promise.reject(
+          new Error("Owner and requester mistmatch. Internal code DI1")
+        );
+      }
+      return item;
+    })
+    .then((item) => {
+      ClothingItems.findByIdAndRemove({ _id: item._id })
+        .then(() => {
+          console.log("Item deleted!");
+          return res.send({ data: item });
+        })
+        .catch(() => {
+          return res
+            .status(500)
+            .send({ message: "Unable to delete, internal code DI2" });
+        });
+    })
+    .catch((err) => {
+      const thisErr = error[err.name];
+      if (!error[err.name]) {
+        return res
+          .status(500)
+          .send({ message: "Uncaught exception, internal code DI3" });
+      } else if (err.message.includes("DI1")) {
+        return res
+          .status(403)
+          .send({ message: "Owner and requester mismatch! Internal code DI4" });
+      }
+      return res
+        .status(thisErr.code)
+        .send({ message: `${thisErr.message}, internal code DI5` });
+    });
+}; */
