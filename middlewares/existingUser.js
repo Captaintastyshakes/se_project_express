@@ -1,7 +1,9 @@
 const User = require("../models/user");
+const error = require("../utils/errors");
 
 const checkForExistingUser = (req, res, next) => {
   const { email } = req.body;
+  let thisErr;
   return User.findOne({ email })
     .orFail()
     .then(() => {
@@ -9,7 +11,10 @@ const checkForExistingUser = (req, res, next) => {
     })
     .catch((err) => {
       if (err.message.includes("This email is already in use")) {
-        return res.status(409).send({ message: err.message });
+        thisErr = error.EmailInUseError;
+        const { code, message } = thisErr;
+        const outMessage = `Int code C4EU1: ${message}`;
+        return res.status(code).send({ message: outMessage });
       }
       next();
     });

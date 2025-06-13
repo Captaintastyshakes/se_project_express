@@ -1,27 +1,27 @@
 const error = {
   ValidationError: {
     code: 400,
-    message: "Validation error/invalid data submitted. ",
+    message: "Validation error/invalid data submitted.",
   },
   CastError: {
     code: 400,
-    message: "Invalid parameter. ",
+    message: "Invalid parameter.",
   },
   DocumentNotFoundError: {
     code: 404,
-    message: "Resource unable to be found. ",
+    message: "Resource unable to be found.",
   },
   undefined: {
     code: 500,
-    message: "Server error. ",
+    message: "Server error.",
   },
   ConflictError: {
     code: 409,
-    message: "Conflict error. ",
+    message: "Conflict error.",
   },
   AssertionError: {
     code: 400,
-    message: "something's wrong",
+    message: "something's wrong.",
   },
   ReferenceError: {
     code: 401,
@@ -42,6 +42,18 @@ const error = {
   JsonWebTokenError: {
     code: 401,
     message: "Json web token is invalid/doesn't pass authorization.",
+  },
+  EmailInUseError: {
+    code: 409,
+    message: "this email is already in use.",
+  },
+  DeleteError: {
+    code: 500,
+    message: "There was a problem deleting.",
+  },
+  OwnerMismatchError: {
+    code: 403,
+    message: "Owner and requestor mismatch!",
   },
 };
 module.exports = error;

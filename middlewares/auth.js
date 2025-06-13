@@ -4,24 +4,21 @@ const error = require("../utils/errors");
 
 const verifyAuthorization = (req, res, next) => {
   const { authorization } = req.headers;
+  let thisErr;
   if (!authorization || !authorization.startsWith("Bearer ")) {
-    return res.status(401).send({ message: "Authorization denied." });
+    thisErr = error.JsonWebTokenError;
+    const { code, message } = thisErr;
+    return res.status(code).send({ message });
   }
   const token = authorization.replace("Bearer ", "");
   let payload;
   try {
     payload = jwt.verify(token, JWT_SECRET);
   } catch (err) {
-    // console.log("Error block VA: " + err);
-    const thisErr = error[err.name];
-    if (!thisErr) {
-      return res
-        .status(404)
-        .send({ message: "invalid token, sorry- internal code VA1" });
-    }
-    return res
-      .status(thisErr.code)
-      .send({ message: `${thisErr.message}, internal code VA2` });
+    thisErr = error.JsonWebTokenError;
+    const { code, message } = thisErr;
+    const outMessage = `Error block VA, int code VA1: ${message}- ${err.message}`;
+    return res.status(code).send({ message: outMessage });
   }
   req.user = payload;
   next();

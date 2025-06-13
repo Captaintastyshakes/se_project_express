@@ -4,9 +4,10 @@ const error = require("../utils/errors");
 
 const deleteItem = (req, res) => {
   const { itemId } = req.params;
+  let thisErr;
   ClothingItems.findById({ _id: itemId })
     .then((item) => {
-      if (item.owner !== req.user._id) {
+      if (String(item.owner) !== req.user._id) {
         return Promise.reject(
           new Error("Owner and requester mistmatch. Internal code DI1")
         );
@@ -20,50 +21,56 @@ const deleteItem = (req, res) => {
           return res.send({ data: item });
         })
         .catch(() => {
-          return res
-            .status(500)
-            .send({ message: "Unable to delete, internal code DI2" });
+          thisErr = error.DeleteError;
+          const { code, message } = thisErr;
+          const outMessage = `Int code DI2: ${message}`;
+          return res.status(code).send({ message: outMessage });
         });
     })
     .catch((err) => {
-      const thisErr = error[err.name];
       if (!error[err.name]) {
-        return res
-          .status(500)
-          .send({ message: "Uncaught exception, internal code DI3" });
+        thisErr = error.undefined;
+        const { code, message } = thisErr;
+        const outMessage = `Int code DI3: ${message}`;
+        return res.status(code).send({ message: outMessage });
       }
       if (err.message.includes("DI1")) {
-        return res
-          .status(403)
-          .send({ message: "Owner and requester mismatch! Internal code DI4" });
+        thisErr = error.OwnerMismatchError;
+        const { code, message } = thisErr;
+        const outMessage = `Int code DI4: ${message}`;
+        return res.status(code).send({ message: outMessage });
       }
-      return res
-        .status(thisErr.code)
-        .send({ message: `${thisErr.message}, internal code DI5` });
+      thisErr = error[err.name];
+      const { code, message } = thisErr;
+      const outMessage = `Int code DI5: ${message}`;
+      return res.status(code).send({ message: outMessage });
     });
 };
 
 const getItems = (req, res) => {
+  let thisErr;
   ClothingItems.find({})
     .then((items) => {
       console.log("Items returned!");
       res.send({ data: items });
     })
     .catch((err) => {
-      const thisErr = error[err.name];
       if (!error[err.name]) {
-        return res
-          .status(500)
-          .send({ message: "Uncaught exception, internal code GI1" });
+        thisErr = error.undefined;
+        const { code, message } = thisErr;
+        const outMessage = `Int code GI1: ${message}`;
+        return res.status(code).send({ message: outMessage });
       }
-      return res
-        .status(thisErr.code)
-        .send({ message: `${thisErr.message}, internal code GI2` });
+      thisErr = error[err.name];
+      const { code, message } = thisErr;
+      const outMessage = `Int code GI2: ${message}`;
+      return res.status(code).send({ message: outMessage });
     });
 };
 
 const createItem = (req, res) => {
   console.log("Engaging item creation...");
+  let thisErr;
   const { name, weather, imageUrl } = req.body;
   const owner = req.user._id;
   ClothingItems.create({ name, weather, imageUrl, owner })
@@ -72,21 +79,23 @@ const createItem = (req, res) => {
       res.status(201).send(item);
     })
     .catch((err) => {
-      const thisErr = error[err.name];
       if (!error[err.name]) {
-        return res
-          .status(500)
-          .send({ message: "Uncaught exception, internal code CI1" });
+        thisErr = error.undefined;
+        const { code, message } = thisErr;
+        const outMessage = `Int code CI1: ${message}`;
+        return res.status(code).send({ message: outMessage });
       }
-      return res
-        .status(thisErr.code)
-        .send({ message: `${thisErr.message}, internal code CI2` });
+      thisErr = error[err.name];
+      const { code, message } = thisErr;
+      const outMessage = `Int code CI2: ${message}`;
+      return res.status(code).send({ message: outMessage });
     });
 };
 
 const addLike = (req, res) => {
   const { itemId } = req.params;
   const { _id } = req.user;
+  let thisErr;
   ClothingItems.findByIdAndUpdate(
     itemId,
     { $addToSet: { likes: _id } },
@@ -95,24 +104,26 @@ const addLike = (req, res) => {
     .orFail()
     .then((item) => {
       console.log(`Item was updated and like was applied!`);
-      res.status(200).send(item);
+      res.send(item);
     })
     .catch((err) => {
-      const thisErr = error[err.name];
       if (!error[err.name]) {
-        return res
-          .status(500)
-          .send({ message: "Uncaught exception, internal code AL1" });
+        thisErr = error.undefined;
+        const { code, message } = thisErr;
+        const outMessage = `Int code AL1: ${message}`;
+        return res.status(code).send({ message: outMessage });
       }
-      return res
-        .status(thisErr.code)
-        .send({ message: `${thisErr.message}, internal code AL2` });
+      thisErr = error[err.name];
+      const { code, message } = thisErr;
+      const outMessage = `Int code AL2: ${message}`;
+      return res.status(code).send({ message: outMessage });
     });
 };
 
 const removeLike = (req, res) => {
   const { _id } = req.user;
   const { itemId } = req.params;
+  let thisErr;
   ClothingItems.findByIdAndUpdate(
     itemId,
     { $pull: { likes: _id } },
@@ -121,62 +132,20 @@ const removeLike = (req, res) => {
     .orFail()
     .then((item) => {
       console.log(`Item was updated and like was removed!`);
-      res.status(200).send(item);
+      return res.send(item);
     })
     .catch((err) => {
-      const thisErr = error[err.name];
       if (!error[err.name]) {
-        return res
-          .status(500)
-          .send({ message: "Uncaught exception, internal code RL1" });
+        thisErr = error.undefined;
+        const { code, message } = thisErr;
+        const outMessage = `Int code RL1: ${message}`;
+        return res.status(code).send({ message: outMessage });
       }
-      return res
-        .status(thisErr.code)
-        .send({ message: `${thisErr.message}, internal code RL2` });
+      thisErr = error[err.name];
+      const { code, message } = thisErr;
+      const outMessage = `Int code RL2: ${message}`;
+      return res.status(code).send({ message: outMessage });
     });
 };
 
 module.exports = { getItems, createItem, deleteItem, addLike, removeLike };
-
-// storing original forms before linting
-
-/* const deleteItem = (req, res) => {
-  const { itemId } = req.params;
-  ClothingItems.findById({ _id: itemId })
-    //.orFail()
-    .then((item) => {
-      if (item.owner != req.user._id) {
-        return Promise.reject(
-          new Error("Owner and requester mistmatch. Internal code DI1")
-        );
-      }
-      return item;
-    })
-    .then((item) => {
-      ClothingItems.findByIdAndRemove({ _id: item._id })
-        .then(() => {
-          console.log("Item deleted!");
-          return res.send({ data: item });
-        })
-        .catch(() => {
-          return res
-            .status(500)
-            .send({ message: "Unable to delete, internal code DI2" });
-        });
-    })
-    .catch((err) => {
-      const thisErr = error[err.name];
-      if (!error[err.name]) {
-        return res
-          .status(500)
-          .send({ message: "Uncaught exception, internal code DI3" });
-      } else if (err.message.includes("DI1")) {
-        return res
-          .status(403)
-          .send({ message: "Owner and requester mismatch! Internal code DI4" });
-      }
-      return res
-        .status(thisErr.code)
-        .send({ message: `${thisErr.message}, internal code DI5` });
-    });
-}; */

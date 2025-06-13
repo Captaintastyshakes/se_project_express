@@ -2,10 +2,10 @@ const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const User = require("../models/user");
 const { JWT_SECRET } = require("../utils/config");
-
 const error = require("../utils/errors");
 
 const signUp = (req, res) => {
+  let thisErr;
   const { name, avatar, email, password } = req.body;
   bcrypt
     .hash(password, 10)
@@ -28,20 +28,21 @@ const signUp = (req, res) => {
       });
     })
     .catch((err) => {
-      // console.log("Error block SU: " + err);
-      const thisErr = error[err.name];
       if (!error[err.name]) {
-        return res
-          .status(500)
-          .send({ message: "Uncaught exception, internal code SU2" });
+        thisErr = error.undefined;
+        const { code, message } = thisErr;
+        const outMessage = `Int code SU2: ${message}`;
+        return res.status(code).send({ message: outMessage });
       }
-      return res
-        .status(thisErr.code)
-        .send({ message: `${thisErr.message}, internal code SU3` });
+      thisErr = error[err.name];
+      const { code, message } = thisErr;
+      const outMessage = `Int code SU3: ${message}`;
+      return res.status(code).send({ message: outMessage });
     });
 };
 
 const login = (req, res) => {
+  let thisErr;
   const { email, password } = req.body;
   return User.findUserByCredentials(email, password)
     .then((user) => {
@@ -51,39 +52,43 @@ const login = (req, res) => {
       return res.send({ token });
     })
     .catch((err) => {
-      const thisErr = error[err.name];
       if (!error[err.name]) {
-        return res
-          .status(500)
-          .send({ message: "Uncaught exception, internal code LI1" });
+        thisErr = error.undefined;
+        const { code, message } = thisErr;
+        const outMessage = `Int code LI1: ${message}`;
+        return res.status(code).send({ message: outMessage });
       }
-      return res
-        .status(thisErr.code)
-        .send({ message: `${thisErr.message}, internal code LI2` });
+      thisErr = error[err.name];
+      const { code, message } = thisErr;
+      const outMessage = `Int code LI2: ${message}`;
+      return res.status(code).send({ message: outMessage });
     });
 };
 
 const getCurrentUser = (req, res) => {
+  let thisErr;
   const { _id } = req.user;
-  User.findById(_id) // trying to put that variable to use
+  User.findById(_id)
     .orFail()
     .then((user) => {
-      return res.status(200).send(user);
+      return res.send(user);
     })
     .catch((err) => {
-      const thisErr = error[err.name];
       if (!error[err.name]) {
-        return res
-          .status(500)
-          .send({ message: "Uncaught exception, internal code GCU1" });
+        thisErr = error.undefined;
+        const { code, message } = thisErr;
+        const outMessage = `Int code GCU1: ${message}`;
+        return res.status(code).send({ message: outMessage });
       }
-      return res
-        .status(thisErr.code)
-        .send({ message: `${thisErr.message}, internal code GCU2` });
+      thisErr = error[err.name];
+      const { code, message } = thisErr;
+      const outMessage = `Int code GCU2: ${message}`;
+      return res.status(code).send({ message: outMessage });
     });
 };
 
 const updateProfile = (req, res) => {
+  let thisErr;
   const { name, avatar } = req.body;
   const { _id } = req.user;
   User.findByIdAndUpdate(
@@ -92,86 +97,20 @@ const updateProfile = (req, res) => {
     { new: true, runValidators: true }
   )
     .then((user) => {
-      return res.status(200).send(user);
+      return res.send(user);
     })
     .catch((err) => {
-      const thisErr = error[err.name];
       if (!error[err.name]) {
-        return res
-          .status(500)
-          .send({ message: "Uncaught exception, internal code UP1" });
+        thisErr = error.undefined;
+        const { code, message } = thisErr;
+        const outMessage = `Int code UP1: ${message}`;
+        return res.status(code).send({ message: outMessage });
       }
-      return res
-        .status(thisErr.code)
-        .send({ message: `${thisErr.message}, internal code UP2` });
+      thisErr = error[err.name];
+      const { code, message } = thisErr;
+      const outMessage = `Int code UP2: ${message}`;
+      return res.status(code).send({ message: outMessage });
     });
 };
 
 module.exports = { signUp, login, getCurrentUser, updateProfile };
-
-/*
-
-storing originals here - these are the originals, the above are the experiments.
-
-const signUp = (req, res) => {
-  const { name, avatar, email, password } = req.body;
-  bcrypt
-    .hash(password, 10)
-    .then((hash) => {
-      return User.create({
-        name,
-        avatar,
-        email,
-        password: hash,
-      });
-    })
-    .then((user) => {
-      delete user.hash;
-      const { name, _id, email, avatar } = user;
-      console.log("Signed up!");
-      return res.status(201).send({ name, avatar, email, _id });
-    })
-    .catch((err) => {
-      console.log("Error block SU: " + err);
-      const thisErr = error[err.name];
-      if (!error[err.name]) {
-        return res
-          .status(500)
-          .send({ message: "Uncaught exception, internal code SU2" });
-      }
-      return res
-        .status(thisErr.code)
-        .send({ message: `${thisErr.message}, internal code SU3` });
-    });
-};
-
-const login = (req, res) => {
-  const { email, password } = req.body;
-  try {
-    User.findUserByCredentials(email, password)
-      //.orFail()
-      .then((user) => {
-        const token = jwt.sign({ _id: user._id }, JWT_SECRET, {
-          expiresIn: "7d",
-        });
-        return res.send({ token });
-      })
-      .catch((err) => {
-        const thisErr = error[err.name];
-        if (!error[err.name]) {
-          return res
-            .status(500)
-            .send({ message: "Uncaught exception, internal code LI1" });
-        }
-        return res
-          .status(thisErr.code)
-          .send({ message: `${thisErr.message}, internal code LI2` });
-      });
-  } catch {
-    return res
-      .status(401)
-      .send({ message: "couldn't find user! Internal code LI3." });
-  }
-};
-
-*/
