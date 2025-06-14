@@ -31,12 +31,12 @@ const signUp = (req, res) => {
       if (!error[err.name]) {
         thisErr = error.undefined;
         const { code, message } = thisErr;
-        const outMessage = `Int code SU2: ${message}`;
+        const outMessage = `Int code SU2: ${message} ${err.message}`;
         return res.status(code).send({ message: outMessage });
       }
       thisErr = error[err.name];
       const { code, message } = thisErr;
-      const outMessage = `Int code SU3: ${message}`;
+      const outMessage = `Int code SU3: ${message} ${err.message}`;
       return res.status(code).send({ message: outMessage });
     });
 };
@@ -55,12 +55,18 @@ const login = (req, res) => {
       if (!error[err.name]) {
         thisErr = error.undefined;
         const { code, message } = thisErr;
-        const outMessage = `Int code LI1: ${message}`;
+        const outMessage = `Int code LI1: ${message} ${err.message}`;
+        return res.status(code).send({ message: outMessage });
+      }
+      if (err.message.includes("FUBC")) {
+        thisErr = error.ReferenceError;
+        const { code, message } = thisErr;
+        const outMessage = `Int code LI2: ${message} ${err.message}`;
         return res.status(code).send({ message: outMessage });
       }
       thisErr = error[err.name];
       const { code, message } = thisErr;
-      const outMessage = `Int code LI2: ${message}`;
+      const outMessage = `Int code LI3: ${message} ${err.message}`;
       return res.status(code).send({ message: outMessage });
     });
 };
@@ -77,12 +83,12 @@ const getCurrentUser = (req, res) => {
       if (!error[err.name]) {
         thisErr = error.undefined;
         const { code, message } = thisErr;
-        const outMessage = `Int code GCU1: ${message}`;
+        const outMessage = `Int code GCU1: ${message} ${err.message}`;
         return res.status(code).send({ message: outMessage });
       }
       thisErr = error[err.name];
       const { code, message } = thisErr;
-      const outMessage = `Int code GCU2: ${message}`;
+      const outMessage = `Int code GCU2: ${message} ${err.message}`;
       return res.status(code).send({ message: outMessage });
     });
 };
@@ -103,12 +109,12 @@ const updateProfile = (req, res) => {
       if (!error[err.name]) {
         thisErr = error.undefined;
         const { code, message } = thisErr;
-        const outMessage = `Int code UP1: ${message}`;
+        const outMessage = `Int code UP1: ${message} ${err.message}`;
         return res.status(code).send({ message: outMessage });
       }
       thisErr = error[err.name];
       const { code, message } = thisErr;
-      const outMessage = `Int code UP2: ${message}`;
+      const outMessage = `Int code UP2: ${message} ${err.message}`;
       return res.status(code).send({ message: outMessage });
     });
 };

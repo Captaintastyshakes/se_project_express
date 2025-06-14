@@ -17,7 +17,7 @@ const verifyAuthorization = (req, res, next) => {
   } catch (err) {
     thisErr = error.JsonWebTokenError;
     const { code, message } = thisErr;
-    const outMessage = `Error block VA, int code VA1: ${message}- ${err.message}`;
+    const outMessage = `Error block VA, int code VA1: ${message} ${err.message}`;
     return res.status(code).send({ message: outMessage });
   }
   req.user = payload;

@@ -44,7 +44,7 @@ userSchema.statics.findUserByCredentials = function findUserByCredentials(
   if (!email || !password) {
     return Promise.reject(
       new Error(
-        "You didn't provide either an email or password. Internal code FUBC1"
+        "Int subcode FUBC1: You didn't provide either an email or password."
       )
     );
   }
@@ -52,12 +52,12 @@ userSchema.statics.findUserByCredentials = function findUserByCredentials(
     .select("+password")
     .then((user) => {
       if (!user) {
-        return Promise.reject(new Error("User not found! Internal code FUBC2"));
+        return Promise.reject(new Error("Int subcode FUBC2: User not found!"));
       }
       return bcrypt.compare(password, user.password).then((matched) => {
         if (!matched) {
           return Promise.reject(
-            new Error("Bad credentials. Internal code FUBC3")
+            new Error("Int subcode FUBC3: Bad credentials.")
           );
         }
         return user;

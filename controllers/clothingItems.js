@@ -9,7 +9,7 @@ const deleteItem = (req, res) => {
     .then((item) => {
       if (String(item.owner) !== req.user._id) {
         return Promise.reject(
-          new Error("Owner and requester mistmatch. Internal code DI1")
+          new Error("Int subcode DI1: Owner and requester mistmatch.")
         );
       }
       return item;
@@ -31,18 +31,18 @@ const deleteItem = (req, res) => {
       if (!error[err.name]) {
         thisErr = error.undefined;
         const { code, message } = thisErr;
-        const outMessage = `Int code DI3: ${message}`;
+        const outMessage = `Int code DI3: ${message} ${err.message}`;
         return res.status(code).send({ message: outMessage });
       }
       if (err.message.includes("DI1")) {
         thisErr = error.OwnerMismatchError;
         const { code, message } = thisErr;
-        const outMessage = `Int code DI4: ${message}`;
+        const outMessage = `Int code DI4: ${message} ${err.message}`;
         return res.status(code).send({ message: outMessage });
       }
       thisErr = error[err.name];
       const { code, message } = thisErr;
-      const outMessage = `Int code DI5: ${message}`;
+      const outMessage = `Int code DI5: ${message} ${err.message}`;
       return res.status(code).send({ message: outMessage });
     });
 };
@@ -58,12 +58,12 @@ const getItems = (req, res) => {
       if (!error[err.name]) {
         thisErr = error.undefined;
         const { code, message } = thisErr;
-        const outMessage = `Int code GI1: ${message}`;
+        const outMessage = `Int code GI1: ${message} ${err.message}`;
         return res.status(code).send({ message: outMessage });
       }
       thisErr = error[err.name];
       const { code, message } = thisErr;
-      const outMessage = `Int code GI2: ${message}`;
+      const outMessage = `Int code GI2: ${message} ${err.message}`;
       return res.status(code).send({ message: outMessage });
     });
 };
@@ -82,12 +82,12 @@ const createItem = (req, res) => {
       if (!error[err.name]) {
         thisErr = error.undefined;
         const { code, message } = thisErr;
-        const outMessage = `Int code CI1: ${message}`;
+        const outMessage = `Int code CI1: ${message} ${err.message}`;
         return res.status(code).send({ message: outMessage });
       }
       thisErr = error[err.name];
       const { code, message } = thisErr;
-      const outMessage = `Int code CI2: ${message}`;
+      const outMessage = `Int code CI2: ${message} ${err.message}`;
       return res.status(code).send({ message: outMessage });
     });
 };
@@ -110,12 +110,12 @@ const addLike = (req, res) => {
       if (!error[err.name]) {
         thisErr = error.undefined;
         const { code, message } = thisErr;
-        const outMessage = `Int code AL1: ${message}`;
+        const outMessage = `Int code AL1: ${message} ${err.message}`;
         return res.status(code).send({ message: outMessage });
       }
       thisErr = error[err.name];
       const { code, message } = thisErr;
-      const outMessage = `Int code AL2: ${message}`;
+      const outMessage = `Int code AL2: ${message} ${err.message}`;
       return res.status(code).send({ message: outMessage });
     });
 };
@@ -138,12 +138,12 @@ const removeLike = (req, res) => {
       if (!error[err.name]) {
         thisErr = error.undefined;
         const { code, message } = thisErr;
-        const outMessage = `Int code RL1: ${message}`;
+        const outMessage = `Int code RL1: ${message} ${err.message}`;
         return res.status(code).send({ message: outMessage });
       }
       thisErr = error[err.name];
       const { code, message } = thisErr;
-      const outMessage = `Int code RL2: ${message}`;
+      const outMessage = `Int code RL2: ${message} ${err.message}`;
       return res.status(code).send({ message: outMessage });
     });
 };
