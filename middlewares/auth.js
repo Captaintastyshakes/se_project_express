@@ -4,6 +4,7 @@ const error = require("../utils/errors");
 
 const verifyAuthorization = (req, res, next) => {
   const { authorization } = req.headers;
+  //console.log(`Here is their authorization... ${String(authorization)}`);
   let thisErr;
   if (!authorization || !authorization.startsWith("Bearer ")) {
     thisErr = error.JsonWebTokenError;

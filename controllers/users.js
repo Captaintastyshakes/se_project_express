@@ -49,7 +49,14 @@ const login = (req, res) => {
       const token = jwt.sign({ _id: user._id }, JWT_SECRET, {
         expiresIn: "7d",
       });
-      return res.send({ token });
+      const approvedData = {
+        avatar: user.avatar,
+        name: user.name,
+        _id: user._id,
+        //user,
+      };
+      return res.send({ token, approvedData });
+      //return res.send({ token, user });
     })
     .catch((err) => {
       if (!error[err.name]) {

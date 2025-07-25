@@ -104,6 +104,7 @@ const addLike = (req, res) => {
     .orFail()
     .then((item) => {
       console.log(`Item was updated and like was applied!`);
+      //console.log(item);
       res.send(item);
     })
     .catch((err) => {
