@@ -2,7 +2,26 @@ const ClothingItems = require("../models/clothingItems");
 
 const error = require("../utils/errors");
 
-const deleteItem = (req, res) => {
+const uniError = require("../utils/cErrors");
+const {
+  ConflictError,
+  NotFoundError,
+  ForbiddenError,
+  UnauthorizedError,
+  BadRequestError,
+  GenericError,
+} = require("../utils/cErrors");
+
+const errorBatch = {
+  ConflictError,
+  NotFoundError,
+  ForbiddenError,
+  UnauthorizedError,
+  BadRequestError,
+  GenericError,
+};
+
+const deleteItem = (req, res, next) => {
   const { itemId } = req.params;
   let thisErr;
   ClothingItems.findById({ _id: itemId })
@@ -20,14 +39,18 @@ const deleteItem = (req, res) => {
           console.log("Item deleted!");
           return res.send({ data: item });
         })
-        .catch(() => {
+        /*.catch(() => {
           thisErr = error.DeleteError;
           const { code, message } = thisErr;
           const outMessage = `Int code DI2: ${message}`;
           return res.status(code).send({ message: outMessage });
+        });*/
+        .catch(() => {
+          thisErr = error.DeleteError;
+          next(new GenericError(thisErr.code, thisErr.message));
         });
     })
-    .catch((err) => {
+    /*.catch((err) => {
       if (!error[err.name]) {
         thisErr = error.undefined;
         const { code, message } = thisErr;
@@ -44,17 +67,32 @@ const deleteItem = (req, res) => {
       const { code, message } = thisErr;
       const outMessage = `Int code DI5: ${message} ${err.message}`;
       return res.status(code).send({ message: outMessage });
+    });*/
+    .catch((err) => {
+      if (errorBatch[err.name]) {
+        next(new errorBatch[err.name](err.message));
+      }
+      if (!error[err.name]) {
+        thisErr = error.undefined;
+        next(new Error(thisErr.message));
+      }
+      if (err.message.includes("DI1")) {
+        thisErr = error.OwnerMismatchError;
+        next(new ForbiddenError(thisErr.message));
+      }
+      thisErr = error[err.name];
+      next(new GenericError(thisErr.code, thisErr.message));
     });
 };
 
-const getItems = (req, res) => {
+const getItems = (req, res, next) => {
   let thisErr;
   ClothingItems.find({})
     .then((items) => {
       console.log("Items returned!");
       res.send({ data: items });
     })
-    .catch((err) => {
+    /*.catch((err) => {
       if (!error[err.name]) {
         thisErr = error.undefined;
         const { code, message } = thisErr;
@@ -65,10 +103,21 @@ const getItems = (req, res) => {
       const { code, message } = thisErr;
       const outMessage = `Int code GI2: ${message} ${err.message}`;
       return res.status(code).send({ message: outMessage });
+    });*/
+    .catch((err) => {
+      if (errorBatch[err.name]) {
+        return next(new errorBatch[err.name](err.message));
+      }
+      if (!error[err.name]) {
+        thisErr = error.undefined;
+        return next(new Error(thisErr.message));
+      }
+      thisErr = error[err.name];
+      return next(new GenericError(thisErr.code, thisErr.message));
     });
 };
 
-const createItem = (req, res) => {
+const createItem = (req, res, next) => {
   console.log("Engaging item creation...");
   let thisErr;
   const { name, weather, imageUrl } = req.body;
@@ -78,7 +127,7 @@ const createItem = (req, res) => {
       console.log("Item created!");
       res.status(201).send(item);
     })
-    .catch((err) => {
+    /*.catch((err) => {
       if (!error[err.name]) {
         thisErr = error.undefined;
         const { code, message } = thisErr;
@@ -89,10 +138,21 @@ const createItem = (req, res) => {
       const { code, message } = thisErr;
       const outMessage = `Int code CI2: ${message} ${err.message}`;
       return res.status(code).send({ message: outMessage });
+    });*/
+    .catch((err) => {
+      if (errorBatch[err.name]) {
+        return next(new errorBatch[err.name](err.message));
+      }
+      if (!error[err.name]) {
+        thisErr = error.undefined;
+        return next(new Error(thisErr.message));
+      }
+      thisErr = error[err.name];
+      return next(new GenericError(thisErr.code, thisErr.message));
     });
 };
 
-const addLike = (req, res) => {
+const addLike = (req, res, next) => {
   const { itemId } = req.params;
   const { _id } = req.user;
   let thisErr;
@@ -107,7 +167,7 @@ const addLike = (req, res) => {
       //console.log(item);
       res.send(item);
     })
-    .catch((err) => {
+    /*.catch((err) => {
       if (!error[err.name]) {
         thisErr = error.undefined;
         const { code, message } = thisErr;
@@ -118,10 +178,21 @@ const addLike = (req, res) => {
       const { code, message } = thisErr;
       const outMessage = `Int code AL2: ${message} ${err.message}`;
       return res.status(code).send({ message: outMessage });
+    });*/
+    .catch((err) => {
+      if (errorBatch[err.name]) {
+        return next(new errorBatch[err.name](err.message));
+      }
+      if (!error[err.name]) {
+        thisErr = error.undefined;
+        return next(new Error(thisErr.message));
+      }
+      thisErr = error[err.name];
+      return next(new GenericError(thisErr.code, thisErr.message));
     });
 };
 
-const removeLike = (req, res) => {
+const removeLike = (req, res, next) => {
   const { _id } = req.user;
   const { itemId } = req.params;
   let thisErr;
@@ -135,7 +206,7 @@ const removeLike = (req, res) => {
       console.log(`Item was updated and like was removed!`);
       return res.send(item);
     })
-    .catch((err) => {
+    /*.catch((err) => {
       if (!error[err.name]) {
         thisErr = error.undefined;
         const { code, message } = thisErr;
@@ -146,6 +217,17 @@ const removeLike = (req, res) => {
       const { code, message } = thisErr;
       const outMessage = `Int code RL2: ${message} ${err.message}`;
       return res.status(code).send({ message: outMessage });
+    });*/
+    .catch((err) => {
+      if (errorBatch[err.name]) {
+        return next(new errorBatch[err.name](err.message));
+      }
+      if (!error[err.name]) {
+        thisErr = error.undefined;
+        return next(new Error(thisErr.message));
+      }
+      thisErr = error[err.name];
+      return next(new GenericError(thisErr.code, thisErr.message));
     });
 };
 

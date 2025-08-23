@@ -25,5 +25,6 @@ module.exports = {
     "no-param-reassign": [1],
     "no-console": [0],
     "consistent-return": [1],
+    "no-unused-vars": ["error", { argsIgnorePattern: "next" }],
   },
 };

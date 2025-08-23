@@ -3,8 +3,26 @@ const jwt = require("jsonwebtoken");
 const User = require("../models/user");
 const { JWT_SECRET } = require("../utils/config");
 const error = require("../utils/errors");
+const uniError = require("../utils/cErrors");
+const {
+  ConflictError,
+  NotFoundError,
+  ForbiddenError,
+  UnauthorizedError,
+  BadRequestError,
+  GenericError,
+} = require("../utils/cErrors");
 
-const signUp = (req, res) => {
+const errorBatch = {
+  ConflictError,
+  NotFoundError,
+  ForbiddenError,
+  UnauthorizedError,
+  BadRequestError,
+  GenericError,
+};
+
+const signUp = (req, res, next) => {
   let thisErr;
   const { name, avatar, email, password } = req.body;
   bcrypt
@@ -27,7 +45,7 @@ const signUp = (req, res) => {
         _id: user._id,
       });
     })
-    .catch((err) => {
+    /*.catch((err) => {
       if (!error[err.name]) {
         thisErr = error.undefined;
         const { code, message } = thisErr;
@@ -38,27 +56,36 @@ const signUp = (req, res) => {
       const { code, message } = thisErr;
       const outMessage = `Int code SU3: ${message} ${err.message}`;
       return res.status(code).send({ message: outMessage });
+    });*/
+    .catch((err) => {
+      if (!error[err.name]) {
+        thisErr = error.undefined;
+        return next(new uniError(`${thisErr}`, thisErr.code, thisErr.message));
+      }
+      thisErr = error[err.name];
+      return next(new uniError(`${thisErr}`, thisErr.code, thisErr.message));
     });
 };
 
-const login = (req, res) => {
+const login = (req, res, next) => {
   let thisErr;
   const { email, password } = req.body;
-  return User.findUserByCredentials(email, password)
-    .then((user) => {
-      const token = jwt.sign({ _id: user._id }, JWT_SECRET, {
-        expiresIn: "7d",
-      });
-      const approvedData = {
-        avatar: user.avatar,
-        name: user.name,
-        _id: user._id,
-        //user,
-      };
-      return res.send({ token, approvedData });
-      //return res.send({ token, user });
-    })
-    .catch((err) => {
+  return (
+    User.findUserByCredentials(email, password)
+      .then((user) => {
+        const token = jwt.sign({ _id: user._id }, JWT_SECRET, {
+          expiresIn: "7d",
+        });
+        const approvedData = {
+          avatar: user.avatar,
+          name: user.name,
+          _id: user._id,
+          //user,
+        };
+        return res.send({ token, approvedData });
+        //return res.send({ token, user });
+      })
+      /*.catch((err) => {
       if (!error[err.name]) {
         thisErr = error.undefined;
         const { code, message } = thisErr;
@@ -75,10 +102,26 @@ const login = (req, res) => {
       const { code, message } = thisErr;
       const outMessage = `Int code LI3: ${message} ${err.message}`;
       return res.status(code).send({ message: outMessage });
-    });
+    });*/
+      .catch((err) => {
+        if (errorBatch[err.name]) {
+          return next(new errorBatch[err.name](err.message));
+        }
+        if (!error[err.name]) {
+          thisErr = error.undefined;
+          return next(new Error(thisErr.message));
+        }
+        if (err.message.includes("FUBC")) {
+          thisErr = error.ReferenceError;
+          return next(new UnauthorizedError(thisErr.message));
+        }
+        thisErr = error[err.name];
+        return next(new GenericError(thisErr.code, thisErr.message));
+      })
+  );
 };
 
-const getCurrentUser = (req, res) => {
+const getCurrentUser = (req, res, next) => {
   let thisErr;
   const { _id } = req.user;
   User.findById(_id)
@@ -86,7 +129,7 @@ const getCurrentUser = (req, res) => {
     .then((user) => {
       return res.send(user);
     })
-    .catch((err) => {
+    /*.catch((err) => {
       if (!error[err.name]) {
         thisErr = error.undefined;
         const { code, message } = thisErr;
@@ -97,10 +140,21 @@ const getCurrentUser = (req, res) => {
       const { code, message } = thisErr;
       const outMessage = `Int code GCU2: ${message} ${err.message}`;
       return res.status(code).send({ message: outMessage });
+    });*/
+    .catch((err) => {
+      if (errorBatch[err.name]) {
+        return next(new errorBatch[err.name](err.message));
+      }
+      if (!error[err.name]) {
+        thisErr = error.undefined;
+        return next(new Error(thisErr.message));
+      }
+      thisErr = error[err.name];
+      return next(new GenericError(thisErr.code, thisErr.message));
     });
 };
 
-const updateProfile = (req, res) => {
+const updateProfile = (req, res, next) => {
   let thisErr;
   const { name, avatar } = req.body;
   const { _id } = req.user;
@@ -112,7 +166,7 @@ const updateProfile = (req, res) => {
     .then((user) => {
       return res.send(user);
     })
-    .catch((err) => {
+    /*.catch((err) => {
       if (!error[err.name]) {
         thisErr = error.undefined;
         const { code, message } = thisErr;
@@ -123,6 +177,17 @@ const updateProfile = (req, res) => {
       const { code, message } = thisErr;
       const outMessage = `Int code UP2: ${message} ${err.message}`;
       return res.status(code).send({ message: outMessage });
+    });*/
+    .catch((err) => {
+      if (errorBatch[err.name]) {
+        return next(new errorBatch[err.name](err.message));
+      }
+      if (!error[err.name]) {
+        thisErr = error.undefined;
+        return next(new Error(thisErr.message));
+      }
+      thisErr = error[err.name];
+      return next(new GenericError(thisErr.code, thisErr.message));
     });
 };
 
