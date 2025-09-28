@@ -14,6 +14,8 @@ const { errors } = require("celebrate");
 
 const { requestLogger, errorLogger } = require("./middlewares/logger");
 
+require("dotenv").config();
+
 mongoose.connect("mongodb://127.0.0.1:27017/wtwr_db");
 
 app.use(express.urlencoded({ extended: true }));
