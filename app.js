@@ -20,6 +20,12 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(cors());
 app.use(requestLogger);
+app.get("/crash-test", () => {
+  //!!!!
+  setTimeout(() => {
+    throw new Error("The server will crash now.");
+  }, 0);
+}); //REMOVE AFTER THE PROJECT IS ACCEPTED!!!
 app.use("/", mainRouter);
 app.use(errorLogger);
 app.use(errors());
