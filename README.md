@@ -43,9 +43,9 @@ www.tastywearlab.jumpingcrab.com.
 (API requests go to api.tastywearlab.com).
 
 PROJECT PITCH
-https://drive.google.com/file/d/1F1DFTAhNMjE3Ksc39zKt6vF4TXtOC7b3/view?usp=drive_link
+https://drive.google.com/file/d/1F1DFTAhNMjE3Ksc39zKt6vF4TXtOC7b3/view?usp=sharing
 
 PROJECT DEMO
-https://drive.google.com/file/d/11ZvQUr2C5KGCI294GeCzTwL_mNT-QRmd/view?usp=drive_link
+https://drive.google.com/file/d/11ZvQUr2C5KGCI294GeCzTwL_mNT-QRmd/view?usp=sharing
 
 Cheers!
