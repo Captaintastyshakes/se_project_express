@@ -27,3 +27,25 @@ All the data for this project interfaces with databases generated and modified b
 `npm run start` — to launch the server
 
 `npm run dev` — to launch the server with the hot reload feature
+
+//THE WORLD WIDE WEB//
+
+This project, including both the backend/node stuff and the frontend/react stuff, now all runs continuously on a remote server via google cloud services using an ubuntu virtual machine. PM2, as a process, serves the backend requests while nginx redirects traffic from the default ports of the VM to the ports configured for my front end and serves the html back to the client. The traffic is secured using Certbot for certification, utilizing https and environmental variables to help secure data.
+
+The address for users is going to be either
+
+tastywearlab.jumpingcrab.com
+
+or
+
+www.tastywearlab.jumpingcrab.com.
+
+(API requests go to api.tastywearlab.com).
+
+PROJECT PITCH
+https://drive.google.com/file/d/1F1DFTAhNMjE3Ksc39zKt6vF4TXtOC7b3/view?usp=drive_link
+
+PROJECT DEMO
+https://drive.google.com/file/d/11ZvQUr2C5KGCI294GeCzTwL_mNT-QRmd/view?usp=drive_link
+
+Cheers!
