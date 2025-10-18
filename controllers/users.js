@@ -2,8 +2,19 @@ const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const User = require("../models/user");
 const { JWT_SECRET } = require("../utils/config");
-const error = require("../utils/errors");
-const uniError = require("../utils/cErrors");
+const error = require("../errors/errors");
+const cError = require("../errors/cErrors");
+//const uniError = require("../utils/cErrors");
+/*const {
+  ConflictError,
+  NotFoundError,
+  ForbiddenError,
+  UnauthorizedError,
+  BadRequestError,
+  GenericError,
+} = require("../utils/cErrors");*/
+
+//const cError {
 const {
   ConflictError,
   NotFoundError,
@@ -11,16 +22,7 @@ const {
   UnauthorizedError,
   BadRequestError,
   GenericError,
-} = require("../utils/cErrors");
-
-const errorBatch = {
-  ConflictError,
-  NotFoundError,
-  ForbiddenError,
-  UnauthorizedError,
-  BadRequestError,
-  GenericError,
-};
+} = cError;
 
 const signUp = (req, res, next) => {
   let thisErr;
@@ -104,8 +106,8 @@ const login = (req, res, next) => {
       return res.status(code).send({ message: outMessage });
     });*/
       .catch((err) => {
-        if (errorBatch[err.name]) {
-          return next(new errorBatch[err.name](err.message));
+        if (cError[err.name]) {
+          return next(new cError[err.name](err.message));
         }
         if (!error[err.name]) {
           thisErr = error.undefined;
@@ -129,21 +131,9 @@ const getCurrentUser = (req, res, next) => {
     .then((user) => {
       return res.send(user);
     })
-    /*.catch((err) => {
-      if (!error[err.name]) {
-        thisErr = error.undefined;
-        const { code, message } = thisErr;
-        const outMessage = `Int code GCU1: ${message} ${err.message}`;
-        return res.status(code).send({ message: outMessage });
-      }
-      thisErr = error[err.name];
-      const { code, message } = thisErr;
-      const outMessage = `Int code GCU2: ${message} ${err.message}`;
-      return res.status(code).send({ message: outMessage });
-    });*/
     .catch((err) => {
-      if (errorBatch[err.name]) {
-        return next(new errorBatch[err.name](err.message));
+      if (cError[err.name]) {
+        return next(new cError[err.name](err.message));
       }
       if (!error[err.name]) {
         thisErr = error.undefined;
@@ -166,21 +156,9 @@ const updateProfile = (req, res, next) => {
     .then((user) => {
       return res.send(user);
     })
-    /*.catch((err) => {
-      if (!error[err.name]) {
-        thisErr = error.undefined;
-        const { code, message } = thisErr;
-        const outMessage = `Int code UP1: ${message} ${err.message}`;
-        return res.status(code).send({ message: outMessage });
-      }
-      thisErr = error[err.name];
-      const { code, message } = thisErr;
-      const outMessage = `Int code UP2: ${message} ${err.message}`;
-      return res.status(code).send({ message: outMessage });
-    });*/
     .catch((err) => {
-      if (errorBatch[err.name]) {
-        return next(new errorBatch[err.name](err.message));
+      if (cError[err.name]) {
+        return next(new cError[err.name](err.message));
       }
       if (!error[err.name]) {
         thisErr = error.undefined;

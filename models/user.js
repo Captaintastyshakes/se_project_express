@@ -11,7 +11,7 @@ const userSchema = new mongoose.Schema({
   },
   avatar: {
     type: String,
-    required: true, //seeing what happens when I optionalize this...
+    required: true,
     validate: {
       validator(v) {
         return validator.isURL(v);

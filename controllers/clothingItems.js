@@ -1,8 +1,8 @@
 const ClothingItems = require("../models/clothingItems");
 
-const error = require("../utils/errors");
+const error = require("../errors/errors");
 
-const uniError = require("../utils/cErrors");
+const cError = require("../errors/cErrors");
 const {
   ConflictError,
   NotFoundError,
@@ -10,16 +10,7 @@ const {
   UnauthorizedError,
   BadRequestError,
   GenericError,
-} = require("../utils/cErrors");
-
-const errorBatch = {
-  ConflictError,
-  NotFoundError,
-  ForbiddenError,
-  UnauthorizedError,
-  BadRequestError,
-  GenericError,
-};
+} = cError;
 
 const deleteItem = (req, res, next) => {
   const { itemId } = req.params;
@@ -39,38 +30,14 @@ const deleteItem = (req, res, next) => {
           console.log("Item deleted!");
           return res.send({ data: item });
         })
-        /*.catch(() => {
-          thisErr = error.DeleteError;
-          const { code, message } = thisErr;
-          const outMessage = `Int code DI2: ${message}`;
-          return res.status(code).send({ message: outMessage });
-        });*/
         .catch(() => {
           thisErr = error.DeleteError;
           next(new GenericError(thisErr.code, thisErr.message));
         });
     })
-    /*.catch((err) => {
-      if (!error[err.name]) {
-        thisErr = error.undefined;
-        const { code, message } = thisErr;
-        const outMessage = `Int code DI3: ${message} ${err.message}`;
-        return res.status(code).send({ message: outMessage });
-      }
-      if (err.message.includes("DI1")) {
-        thisErr = error.OwnerMismatchError;
-        const { code, message } = thisErr;
-        const outMessage = `Int code DI4: ${message} ${err.message}`;
-        return res.status(code).send({ message: outMessage });
-      }
-      thisErr = error[err.name];
-      const { code, message } = thisErr;
-      const outMessage = `Int code DI5: ${message} ${err.message}`;
-      return res.status(code).send({ message: outMessage });
-    });*/
     .catch((err) => {
-      if (errorBatch[err.name]) {
-        next(new errorBatch[err.name](err.message));
+      if (cError[err.name]) {
+        next(new cError[err.name](err.message));
       }
       if (!error[err.name]) {
         thisErr = error.undefined;
@@ -92,21 +59,9 @@ const getItems = (req, res, next) => {
       console.log("Items returned!");
       res.send({ data: items });
     })
-    /*.catch((err) => {
-      if (!error[err.name]) {
-        thisErr = error.undefined;
-        const { code, message } = thisErr;
-        const outMessage = `Int code GI1: ${message} ${err.message}`;
-        return res.status(code).send({ message: outMessage });
-      }
-      thisErr = error[err.name];
-      const { code, message } = thisErr;
-      const outMessage = `Int code GI2: ${message} ${err.message}`;
-      return res.status(code).send({ message: outMessage });
-    });*/
     .catch((err) => {
-      if (errorBatch[err.name]) {
-        return next(new errorBatch[err.name](err.message));
+      if (cError[err.name]) {
+        return next(new cError[err.name](err.message));
       }
       if (!error[err.name]) {
         thisErr = error.undefined;
@@ -127,21 +82,9 @@ const createItem = (req, res, next) => {
       console.log("Item created!");
       res.status(201).send(item);
     })
-    /*.catch((err) => {
-      if (!error[err.name]) {
-        thisErr = error.undefined;
-        const { code, message } = thisErr;
-        const outMessage = `Int code CI1: ${message} ${err.message}`;
-        return res.status(code).send({ message: outMessage });
-      }
-      thisErr = error[err.name];
-      const { code, message } = thisErr;
-      const outMessage = `Int code CI2: ${message} ${err.message}`;
-      return res.status(code).send({ message: outMessage });
-    });*/
     .catch((err) => {
-      if (errorBatch[err.name]) {
-        return next(new errorBatch[err.name](err.message));
+      if (cError[err.name]) {
+        return next(new cError[err.name](err.message));
       }
       if (!error[err.name]) {
         thisErr = error.undefined;
@@ -167,21 +110,9 @@ const addLike = (req, res, next) => {
       //console.log(item);
       res.send(item);
     })
-    /*.catch((err) => {
-      if (!error[err.name]) {
-        thisErr = error.undefined;
-        const { code, message } = thisErr;
-        const outMessage = `Int code AL1: ${message} ${err.message}`;
-        return res.status(code).send({ message: outMessage });
-      }
-      thisErr = error[err.name];
-      const { code, message } = thisErr;
-      const outMessage = `Int code AL2: ${message} ${err.message}`;
-      return res.status(code).send({ message: outMessage });
-    });*/
     .catch((err) => {
-      if (errorBatch[err.name]) {
-        return next(new errorBatch[err.name](err.message));
+      if (cError[err.name]) {
+        return next(new cError[err.name](err.message));
       }
       if (!error[err.name]) {
         thisErr = error.undefined;
@@ -206,21 +137,9 @@ const removeLike = (req, res, next) => {
       console.log(`Item was updated and like was removed!`);
       return res.send(item);
     })
-    /*.catch((err) => {
-      if (!error[err.name]) {
-        thisErr = error.undefined;
-        const { code, message } = thisErr;
-        const outMessage = `Int code RL1: ${message} ${err.message}`;
-        return res.status(code).send({ message: outMessage });
-      }
-      thisErr = error[err.name];
-      const { code, message } = thisErr;
-      const outMessage = `Int code RL2: ${message} ${err.message}`;
-      return res.status(code).send({ message: outMessage });
-    });*/
     .catch((err) => {
-      if (errorBatch[err.name]) {
-        return next(new errorBatch[err.name](err.message));
+      if (cError[err.name]) {
+        return next(new cError[err.name](err.message));
       }
       if (!error[err.name]) {
         thisErr = error.undefined;

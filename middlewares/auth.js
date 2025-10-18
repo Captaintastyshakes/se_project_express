@@ -1,10 +1,9 @@
 const jwt = require("jsonwebtoken");
 const { JWT_SECRET } = require("../utils/config");
-const error = require("../utils/errors");
+const error = require("../errors/errors");
 
 const verifyAuthorization = (req, res, next) => {
   const { authorization } = req.headers;
-  //console.log(`Here is their authorization... ${String(authorization)}`);
   let thisErr;
   if (!authorization || !authorization.startsWith("Bearer ")) {
     thisErr = error.JsonWebTokenError;

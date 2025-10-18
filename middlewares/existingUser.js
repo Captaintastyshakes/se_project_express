@@ -1,5 +1,5 @@
 const User = require("../models/user");
-const error = require("../utils/errors");
+const error = require("../errors/errors");
 
 const checkForExistingUser = (req, res, next) => {
   const { email } = req.body;

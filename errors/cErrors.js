@@ -1,21 +1,3 @@
-/*class uniError extends Error {
-  constructor(name, code, message) {
-    super(message);
-    this.name = name;
-    this.statusCode = code;
-  }
-}*/
-
-/*const metaConstructor = (data) => {
-  const {name, code, message} = data;
-  class `${name}` extends Error {
-    constructor(code, message) {
-      super(message);
-      this.statusCode = code;
-    }
-  }
-};*/
-
 class BadRequestError extends Error {
   constructor(message) {
     super(message);
@@ -58,7 +40,6 @@ class GenericError extends Error {
   }
 }
 
-//module.exports = uniError;
 module.exports = {
   ConflictError,
   NotFoundError,

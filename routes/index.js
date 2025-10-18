@@ -4,7 +4,7 @@ const userRouter = require("./users");
 
 const clothingRouter = require("./clothingItems");
 
-const error = require("../utils/errors");
+const error = require("../errors/errors");
 
 const { signUp, login } = require("../controllers/users");
 
