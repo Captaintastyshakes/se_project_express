@@ -1,6 +1,13 @@
 const { Joi, celebrate } = require("celebrate");
 const validator = require("validator");
 
+const validateUrl = (value, helpers) => {
+  if (validator.isURL(value)) {
+    return value;
+  }
+  return helpers.error(`string.uri`);
+};
+
 const itemBodyValidator = () => {
   celebrate({
     body: Joi.object().keys({
@@ -16,8 +23,8 @@ const itemBodyValidator = () => {
     }),
   });
 };
-/*The item name is a required string of between 2 and 30 characters.
-An image URL is a required string in a URL format.*/
+/* The item name is a required string of between 2 and 30 characters.
+An image URL is a required string in a URL format. */
 
 const userBodyValidator = () => {
   celebrate({
@@ -43,10 +50,10 @@ const userBodyValidator = () => {
     }),
   });
 };
-/*The user name is a string of between 2 and 30 characters.
+/* The user name is a string of between 2 and 30 characters.
 The user avatar is a required string in a URL format.
 Email is a required string in a valid email format.
-Password is a required string.*/
+Password is a required string. */
 
 const authValidator = () => {
   celebrate({
@@ -63,8 +70,8 @@ const authValidator = () => {
     }),
   });
 };
-/*Email is a required string in a valid email format.
-Password is a required string.*/
+/* Email is a required string in a valid email format.
+Password is a required string. */
 
 const contentIdValidator = () => {
   celebrate({
@@ -81,14 +88,7 @@ const contentIdValidator = () => {
     }),
   });
 };
-//IDs must be a hexadecimal value length of 24 characters.
-
-const validateUrl = (value, helpers) => {
-  if (validator.isURL(value)) {
-    return value;
-  }
-  return helpers.error(`string.uri`);
-};
+// IDs must be a hexadecimal value length of 24 characters.
 
 module.exports = {
   itemBodyValidator,

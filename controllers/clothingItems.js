@@ -3,14 +3,8 @@ const ClothingItems = require("../models/clothingItems");
 const error = require("../errors/errors");
 
 const cError = require("../errors/cErrors");
-const {
-  ConflictError,
-  NotFoundError,
-  ForbiddenError,
-  UnauthorizedError,
-  BadRequestError,
-  GenericError,
-} = cError;
+
+const { ForbiddenError, GenericError } = cError;
 
 const deleteItem = (req, res, next) => {
   const { itemId } = req.params;
@@ -107,7 +101,6 @@ const addLike = (req, res, next) => {
     .orFail()
     .then((item) => {
       console.log(`Item was updated and like was applied!`);
-      //console.log(item);
       res.send(item);
     })
     .catch((err) => {

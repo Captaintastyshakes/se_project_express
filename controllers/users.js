@@ -5,14 +5,7 @@ const { JWT_SECRET } = require("../utils/config");
 const error = require("../errors/errors");
 const cError = require("../errors/cErrors");
 
-const {
-  ConflictError,
-  NotFoundError,
-  ForbiddenError,
-  UnauthorizedError,
-  BadRequestError,
-  GenericError,
-} = cError;
+const { UnauthorizedError, BadRequestError, GenericError } = cError;
 
 const signUp = (req, res, next) => {
   let thisErr;
