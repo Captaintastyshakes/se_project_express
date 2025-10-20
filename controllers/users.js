@@ -70,8 +70,19 @@ const login = (req, res, next) => {
         thisErr = error.undefined;
         return next(new Error(thisErr.message));
       }
-      if (err.message.includes("FUBC")) {
+      if (err.message.includes("FUBC1")) {
+        console.log(err.message);
+        thisErr = error.ValidationError;
+        return next(new BadRequestError(thisErr.message));
+      }
+      if (err.message.includes("FUBC2")) {
+        console.log(err.message);
         thisErr = error.ReferenceError;
+        return next(new BadRequestError(thisErr.message));
+      }
+      if (err.message.includes("FUBC3")) {
+        console.log(err.message);
+        thisErr = error.JsonWebTokenError;
         return next(new UnauthorizedError(thisErr.message));
       }
       thisErr = error[err.name];
