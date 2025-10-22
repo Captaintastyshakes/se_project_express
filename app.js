@@ -29,8 +29,8 @@ app.get("/crash-test", () => {
   }, 0);
 }); // REMOVE AFTER THE PROJECT IS ACCEPTED!!!
 app.use("/", mainRouter);
-app.use(errorLogger);
 app.use(errors());
+app.use(errorLogger);
 app.use(errorHandler);
 
 const { PORT = 3001 } = process.env;

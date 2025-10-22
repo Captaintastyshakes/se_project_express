@@ -10,16 +10,21 @@ const {
   removeLike,
 } = require("../controllers/clothingItems");
 
+const {
+  itemBodyValidator,
+  contentIdValidator,
+} = require("../middlewares/validation");
+
 router.get("/", getItems);
 
 router.use("/", verifyAuthorization);
 
-router.post("/", createItem);
+router.post("/", itemBodyValidator, createItem);
 
-router.delete("/:itemId", deleteItem);
+router.delete("/:itemId", contentIdValidator, deleteItem);
 
-router.put("/:itemId/likes", addLike);
+router.put("/:itemId/likes", contentIdValidator, addLike);
 
-router.delete("/:itemId/likes", removeLike);
+router.delete("/:itemId/likes", contentIdValidator, removeLike);
 
 module.exports = router;
