@@ -1,5 +1,6 @@
 const User = require("../models/user");
 const error = require("../errors/errors");
+const { ConflictError } = require("../errors/cErrors");
 
 const checkForExistingUser = (req, res, next) => {
   const { email } = req.body;
@@ -12,9 +13,9 @@ const checkForExistingUser = (req, res, next) => {
     .catch((err) => {
       if (err.message.includes("This email is already in use")) {
         thisErr = error.EmailInUseError;
-        const { code, message } = thisErr;
+        const { message } = thisErr;
         const outMessage = `Int code C4EU1: ${message}`;
-        return res.status(code).send({ message: outMessage });
+        next(new ConflictError(outMessage));
       }
       next();
     });

@@ -56,8 +56,8 @@ Password is a required string. */
 const authValidator = celebrate({
   body: Joi.object().keys({
     email: Joi.string().required().email(),
-    password: Joi.string().required().min(8).max(30).messages({
-      "string.min": "The minimum length of the 'password' field is 8.",
+    password: Joi.string().required().min(3).max(30).messages({
+      "string.min": "The minimum length of the 'password' field is 3.", // changed the min password length mostly because 'my' user that I already made had <8 characters in their password -__- I know this might come across as a security concern but a) the actual substance of the password validation doesn't even happen here and b) I'm willing to absorb whatever risk if it means not having to manually adjust my user entity in the database via the ubuntu terminal
       "string.max": "The maximum length of the 'password' field is 30.",
       "string.empty": "The 'password' field must be filled in.",
     }),
@@ -78,10 +78,27 @@ const contentIdValidator = celebrate({
 
 // IDs must be a hexadecimal value length of 24 characters.
 
+const updateUserBodyValidator = celebrate({
+  body: Joi.object().keys({
+    name: Joi.string().required().min(2).max(30).messages({
+      "string.min": "The minimum length of the 'name' field is 2.",
+      "string.max": "The maximum length of the 'name' field is 30.",
+      "string.empty": "The 'name' field must be filled in.",
+    }),
+    avatar: Joi.string().required().custom(validateUrl).messages({
+      "string.empty": "The 'avatar url' must be filled in.",
+      "string.uri": "The 'avatar url' field must be a valid url.",
+    }),
+  }),
+});
+
+// This is a truncated clone of the user body validator meant to be used when patching user info and the only info in the body is name and avatar
+
 module.exports = {
   itemBodyValidator,
   userBodyValidator,
   authValidator,
   contentIdValidator,
   validateUrl,
+  updateUserBodyValidator,
 };

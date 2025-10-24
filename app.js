@@ -1,3 +1,5 @@
+require("dotenv").config();
+
 const express = require("express");
 
 const app = express();
@@ -13,8 +15,6 @@ const mainRouter = require("./routes/index");
 const errorHandler = require("./middlewares/errorHandler");
 
 const { requestLogger, errorLogger } = require("./middlewares/logger");
-
-require("dotenv").config();
 
 mongoose.connect("mongodb://127.0.0.1:27017/wtwr_db");
 

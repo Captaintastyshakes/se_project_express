@@ -6,6 +6,8 @@ const clothingRouter = require("./clothingItems");
 
 const error = require("../errors/errors");
 
+const { NotFoundError } = require("../errors/cErrors");
+
 const { signUp, login } = require("../controllers/users");
 
 const { checkForExistingUser } = require("../middlewares/existingUser");
@@ -24,9 +26,9 @@ router.post("/signup", userBodyValidator, checkForExistingUser, signUp); // adde
 
 router.post("/signin", authValidator, login);
 
-router.use((req, res) => {
-  const { code, message } = error.DocumentNotFoundError;
-  res.status(code).send({ message });
+router.use((req, res, next) => {
+  const { message } = error.DocumentNotFoundError;
+  next(new NotFoundError(message));
 });
 
 module.exports = router;
